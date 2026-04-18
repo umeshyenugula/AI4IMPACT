@@ -3,7 +3,7 @@
    Connects to FastAPI backend at localhost:8000
    ============================================================ */
 
-const API_HOST = window.location.port === '8000' ? '' : 'http://localhost:8000';
+const API_HOST =  'https://ai4impact.onrender.com';
 const API_BASE = `${API_HOST}/api/v1`;
 const TRUST_BASE = `${API_HOST}/api/v1/trust`;
 
