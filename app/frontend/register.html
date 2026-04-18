@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — ArtisanPath</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.register-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-top: 72px;
+}
+.register-left {
+  background: linear-gradient(160deg, #1C1009 0%, #3D2010 40%, #1A3328 100%);
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 80px 60px;
+  position: relative; overflow: hidden;
+}
+.register-left::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9963A' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+}
+.reg-mandala {
+  position: absolute;
+  width: 500px; height: 500px;
+  opacity: 0.05;
+  bottom: -100px; right: -100px;
+  animation: rotateSlow 80s linear infinite;
+}
+.register-left .reg-title {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  position: relative;
+}
+.register-left .reg-title em {
+  font-style: italic;
+  color: var(--gold-bright);
+}
+.register-left .reg-sub {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  max-width: 380px;
+  margin-bottom: 36px;
+  position: relative;
+}
+.craft-badges {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  position: relative;
+}
+.craft-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold-pale);
+  background: rgba(201,150,58,0.1);
+  border: 1px solid rgba(201,150,58,0.2);
+  padding: 6px 14px;
+  border-radius: 40px;
+  transition: var(--transition-fast);
+}
+.craft-badge:hover {
+  background: rgba(232,98,26,0.2);
+  border-color: rgba(232,98,26,0.4);
+  color: white;
+}
+.left-benefits {
+  position: relative;
+  margin-top: 36px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.benefit-row {
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.benefit-row .b-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(232,98,26,0.15);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.benefit-row .b-icon svg { width: 16px; height: 16px; color: var(--saffron-light); }
+.benefit-row .b-text {
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+}
+.benefit-row .b-text strong { color: var(--gold-pale); font-weight: 600; }
+
+.register-right {
+  background: var(--ivory);
+  display: flex; align-items: center; justify-content: center;
+  padding: 60px 60px;
+}
+.reg-form-wrap {
+  width: 100%; max-width: 440px;
+}
+.reg-form-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.reg-form-subtitle {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--ink-muted);
+  margin-bottom: 32px;
+}
+
+.ornament-line {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 28px;
+}
+.ornament-line .ol-text {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.ornament-line .ol-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--ivory-dark), transparent);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--saffron) 0%, var(--saffron-deep) 100%);
+  color: white;
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-warm);
+}
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  transform: none;
+}
+
+.success-state {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-state .success-icon {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--teal-light));
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 30px rgba(26,107,94,0.3);
+}
+.success-state .success-icon svg { width: 36px; height: 36px; color: white; }
+.success-state h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.success-state p {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+.success-state .artisan-id-badge {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+}
+.craft-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1.5px solid var(--ivory-dark);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+}
+.craft-option {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.craft-option:hover { background: var(--ivory); }
+.craft-option input { accent-color: var(--saffron); width: 14px; height: 14px; }
+
+@media (max-width: 900px) {
+  .register-page { grid-template-columns: 1fr; }
+  .register-left { display: none; }
+  .register-right { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg class="logo-mark" viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="20" fill="#1C1009"/>
+      <path d="M21 8 L24 16 L32 16 L26 21 L28 29 L21 24 L14 29 L16 21 L10 16 L18 16 Z" fill="#C9963A"/>
+      <circle cx="21" cy="21" r="4" fill="#E8B84B"/>
+    </svg>
+    <span class="logo-text">Artisan<span>AI</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="learning.html">Learning</a></li>
+    <li><a href="workspace.html">Workspace</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="register.html" class="btn-nav outline active">Register Artisan</a>
+    <a href="dashboard.html" class="btn-nav filled">Enter Platform</a>
+  </div>
+</nav>
+
+<div class="register-page">
+  <!-- Left Panel -->
+  <div class="register-left">
+    <svg class="reg-mandala" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="250" cy="250" r="240" fill="none" stroke="white" stroke-width="1"/>
+      <circle cx="250" cy="250" r="180" fill="none" stroke="white" stroke-width="0.5"/>
+      <circle cx="250" cy="250" r="120" fill="none" stroke="white" stroke-width="1"/>
+      <circle cx="250" cy="250" r="60" fill="none" stroke="white" stroke-width="0.5"/>
+      <path d="M250 10 L255 248 L250 250 L245 248 Z" fill="white" opacity="0.6"/>
+      <path d="M490 250 L252 255 L250 250 L252 245 Z" fill="white" opacity="0.6"/>
+      <path d="M250 490 L245 252 L250 250 L255 252 Z" fill="white" opacity="0.6"/>
+      <path d="M10 250 L248 245 L250 250 L248 255 Z" fill="white" opacity="0.6"/>
+    </svg>
+
+    <div class="section-eyebrow" style="color:var(--gold-bright);">
+      <span class="line"></span>Join the Movement<span class="line"></span>
+    </div>
+    <h2 class="reg-title">
+      Begin Your<br><em>Craft Journey</em><br>with AI
+    </h2>
+    <p class="reg-sub">
+      Join thousands of Indian artisans who are growing their craft, income, and legacy with the power of ArtisanPath.
+    </p>
+
+    <div class="craft-badges">
+      <div class="craft-badge">🧵 Banarasi Silk</div>
+      <div class="craft-badge">🎨 Madhubani</div>
+      <div class="craft-badge">🪡 Pashmina</div>
+      <div class="craft-badge">🏺 Dhokra</div>
+      <div class="craft-badge">🖌️ Pattachitra</div>
+      <div class="craft-badge">✂️ Phulkari</div>
+      <div class="craft-badge">🪢 Ikat</div>
+    </div>
+
+    <div class="left-benefits">
+      <div class="benefit-row">
+        <div class="b-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+        </div>
+        <div class="b-text"><strong>Free forever for artisans</strong> — no subscription, no hidden fees, no commissions on your sales.</div>
+      </div>
+      <div class="benefit-row">
+        <div class="b-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+          </svg>
+        </div>
+        <div class="b-text"><strong>Works offline</strong> — full AI analysis in remote villages with no reliable internet connection.</div>
+      </div>
+      <div class="benefit-row">
+        <div class="b-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="b-text"><strong>Personalised learning</strong> — 10-module masterclasses built around your exact craft tradition.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel: Form -->
+  <div class="register-right">
+    <div class="reg-form-wrap">
+      <!-- Form State -->
+      <div id="formState">
+        <h2 class="reg-form-title">Register as an Artisan</h2>
+        <p class="reg-form-subtitle">Your craft is unique. Your profile should be too.</p>
+
+        <div class="ornament-line">
+          <div class="ol-line"></div>
+          <div class="ol-text">Personal Details</div>
+          <div class="ol-line" style="background: linear-gradient(90deg, transparent, var(--ivory-dark));"></div>
+        </div>
+
+        <form id="registerForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="name">Full Name *</label>
+              <input class="form-control" type="text" id="name" placeholder="e.g. Ramesh Gupta" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address *</label>
+              <input class="form-control" type="email" id="email" placeholder="artisan@email.com" required/>
+            </div>
+          </div>
+
+          <div class="ornament-line" style="margin-top:4px;">
+            <div class="ol-line"></div>
+            <div class="ol-text">Location & Craft</div>
+            <div class="ol-line" style="background: linear-gradient(90deg, transparent, var(--ivory-dark));"></div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="region">State / Region *</label>
+              <select class="form-control form-select" id="region" required>
+                <option value="">Select State</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Jammu & Kashmir">Jammu & Kashmir</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Nagaland">Nagaland</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="village">Village / District</label>
+              <input class="form-control" type="text" id="village" placeholder="e.g. Varanasi"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="craft_tradition">Craft Tradition *</label>
+            <select class="form-control form-select" id="craft_tradition" required>
+              <option value="">Select your craft</option>
+              <optgroup label="Textiles">
+                <option value="Banarasi Silk Weaving">Banarasi Silk Weaving</option>
+                <option value="Pashmina Weaving">Pashmina Weaving</option>
+                <option value="Phulkari Embroidery">Phulkari Embroidery</option>
+                <option value="Chikankari Embroidery">Chikankari Embroidery</option>
+                <option value="Ikat Weaving">Ikat Weaving</option>
+                <option value="Bandhani Tie-Dye">Bandhani Tie-Dye</option>
+                <option value="Kani Shawl">Kani Shawl</option>
+                <option value="Sambalpuri Weaving">Sambalpuri Weaving</option>
+              </optgroup>
+              <optgroup label="Painting">
+                <option value="Madhubani Painting">Madhubani Painting</option>
+                <option value="Pattachitra">Pattachitra</option>
+                <option value="Warli Painting">Warli Painting</option>
+                <option value="Kalamkari">Kalamkari</option>
+                <option value="Tanjore Painting">Tanjore Painting</option>
+                <option value="Gond Art">Gond Art</option>
+              </optgroup>
+              <optgroup label="Metal & Craft">
+                <option value="Dhokra Metal Casting">Dhokra Metal Casting</option>
+                <option value="Bidri Work">Bidri Work</option>
+                <option value="Blue Pottery">Blue Pottery</option>
+                <option value="Block Printing">Block Printing</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Register on ArtisanPath
+          </button>
+
+          <p style="font-family:var(--font-title);font-size:0.78rem;color:var(--ink-muted);text-align:center;margin-top:16px;">
+            Already registered? <a href="dashboard.html" style="color:var(--saffron);">Go to Dashboard →</a>
+          </p>
+        </form>
+      </div>
+
+      <!-- Success State -->
+      <div class="success-state" id="successState">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <h3>Welcome to ArtisanPath!</h3>
+        <p>Your artisan profile has been created. Your unique Artisan ID is:</p>
+        <div class="artisan-id-badge" id="artisanIdDisplay">—</div>
+        <p style="font-size:0.82rem;">Save this ID — you'll need it to access your portfolio, learning paths, and workspace.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px;">
+          <a href="portfolio.html" class="btn btn-primary" style="justify-content:center;">Upload Your First Artwork →</a>
+          <a href="dashboard.html" class="btn btn-secondary" style="justify-content:center;">Go to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>Registering...</span>';
+
+  const payload = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    region: document.getElementById('region').value,
+    village: document.getElementById('village').value,
+    craft_tradition: document.getElementById('craft_tradition').value,
+  };
+
+  const result = await api.registerArtisan(payload);
+
+  if (result.ok) {
+    AppState.save(result.data);
+    document.getElementById('artisanIdDisplay').textContent = result.data.artisan_code || `ID #${result.data.id}`;
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+  } else {
+    showToast(`Registration failed: ${result.error}`, 'error');
+    btn.disabled = false;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><path d="M12 5v14M5 12h14"/></svg> Register on ArtisanPath`;
+  }
+});
+initNavbar();
+</script>
+</body>
+</html>

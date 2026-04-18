@@ -1,0 +1,72 @@
+:root {
+  --ink: #1d1a16;
+  --paper: #f6f0e8;
+  --forest: #2f5a4b;
+  --clay: #c16d3d;
+  --sand: #dfcfb5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(193, 109, 61, 0.18), transparent 28%),
+    linear-gradient(135deg, #fbf6ef, #eadfcf 55%, #d8c3a8 100%);
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px 72px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--forest);
+  font-size: 0.82rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 4.6rem);
+  line-height: 1.02;
+  max-width: 760px;
+  margin: 10px 0 14px;
+}
+
+.lede {
+  max-width: 700px;
+  font-size: 1.06rem;
+  line-height: 1.6;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.stats article {
+  background: rgba(255, 251, 245, 0.82);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(47, 90, 75, 0.12);
+}
+
+.stats span {
+  display: block;
+  color: #605345;
+  font-size: 0.86rem;
+}
+
+.stats strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 2rem;
+}
