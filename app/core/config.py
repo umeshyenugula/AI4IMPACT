@@ -13,11 +13,7 @@ class Settings(BaseSettings):
 
     allowed_origins: list[str] = Field(
         default_factory=lambda: [
-            "https://ai-4-impact.vercel.app",
-            "http://localhost:3000",
-            "http://localhost:5173",
-            "http://localhost:5500",
-            "http://127.0.0.1:5500",
+            "*"
         ]
     )
     media_dir: Path = BASE_DIR / "media"
