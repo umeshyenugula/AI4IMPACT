@@ -3,8 +3,8 @@
    Connects to FastAPI backend at localhost:8000
    ============================================================ */
 
-const API_BASE = 'http://localhost:8000/api/v1';
-const TRUST_BASE = 'http://localhost:8000/api/v1/trust';
+const API_BASE = 'https://ai4impact.onrender.com/api/v1';
+const TRUST_BASE = 'https://ai4impact.onrender.com/api/v1/trust';
 
 const api = {
   /* ─── Artisans ─────────────────────────────────────────── */
