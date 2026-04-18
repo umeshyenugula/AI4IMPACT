@@ -1,1 +1,0 @@
-"""Integrated ArtisanAI platform package."""
