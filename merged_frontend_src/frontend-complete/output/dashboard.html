@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — ArtisanPath</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+.activity-list { display: flex; flex-direction: column; gap: 12px; }
+.activity-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px;
+  background: var(--ivory);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--saffron);
+  font-family: var(--font-title);
+}
+.activity-item .act-icon {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(232,98,26,0.1);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.activity-item .act-icon svg { width: 16px; height: 16px; color: var(--saffron); }
+.activity-item .act-text { font-size: 0.88rem; color: var(--ink-soft); line-height: 1.5; }
+.activity-item .act-time { font-size: 0.76rem; color: var(--ink-muted); margin-top: 2px; }
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.quick-action {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px;
+  background: white;
+  border: 1.5px solid var(--ivory-dark);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.quick-action:hover {
+  border-color: var(--saffron);
+  background: rgba(232,98,26,0.03);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+.quick-action .qa-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.quick-action .qa-text {
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.quick-action .qa-sub {
+  font-family: var(--font-title);
+  font-size: 0.76rem;
+  color: var(--ink-muted);
+}
+
+.artisan-id-widget {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 100%);
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.artisan-id-widget::before {
+  content: '';
+  position: absolute; right: -20px; top: -20px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(201,150,58,0.08);
+}
+.artisan-id-widget .id-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--saffron), var(--gold));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.2rem; font-weight: 700; color: white;
+  flex-shrink: 0;
+  position: relative;
+}
+.artisan-id-widget .id-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 700;
+  color: white; margin-bottom: 3px;
+}
+.artisan-id-widget .id-meta {
+  font-family: var(--font-title);
+  font-size: 0.8rem; font-style: italic;
+  color: var(--sand);
+}
+.artisan-id-widget .id-number {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 700;
+  color: var(--gold-bright);
+  text-align: right;
+}
+.artisan-id-widget .id-label {
+  font-family: var(--font-title);
+  font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+.panel {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.panel-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--ivory-dark);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--ink);
+}
+.panel-body { padding: 24px; }
+
+.id-input-group {
+  display: flex; gap: 10px; margin-bottom: 24px;
+}
+.id-input-group input {
+  flex: 1;
+  padding: 12px 16px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: white;
+  border: 1.5px solid var(--ivory-dark);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.id-input-group input:focus { border-color: var(--saffron); }
+.id-input-group button {
+  padding: 12px 20px;
+  background: var(--saffron);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-title);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.id-input-group button:hover { background: var(--saffron-deep); }
+
+.edge-list {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.edge-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-sm);
+}
+.edge-item .edge-icon {
+  width: 38px; height: 38px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.edge-item .edge-name {
+  font-family: var(--font-title);
+  font-size: 0.88rem; font-weight: 600;
+  color: var(--ink); flex: 1;
+}
+.edge-badge {
+  font-family: var(--font-title);
+  font-size: 0.7rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 40px;
+}
+.edge-badge.online { background: rgba(26,107,94,0.1); color: var(--teal); }
+.edge-badge.offline { background: rgba(201,150,58,0.1); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg class="logo-mark" viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="20" fill="#1C1009"/>
+      <path d="M21 8 L24 16 L32 16 L26 21 L28 29 L21 24 L14 29 L16 21 L10 16 L18 16 Z" fill="#C9963A"/>
+      <circle cx="21" cy="21" r="4" fill="#E8B84B"/>
+    </svg>
+    <span class="logo-text">Artisan<span>AI</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html" class="active">Dashboard</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="learning.html">Learning</a></li>
+    <li><a href="workspace.html">Workspace</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="register.html" class="btn-nav outline">Register Artisan</a>
+    <a href="workspace.html" class="btn-nav filled">Full Workspace</a>
+  </div>
+</nav>
+
+<div class="layout-sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="artisan-avatar" id="sidebarAvatar">A</div>
+      <div class="artisan-name" id="sidebarName">Artisan</div>
+      <div class="artisan-meta" id="sidebarCraft">Traditional Craft · India</div>
+    </div>
+    <div class="sidebar-section-label">Platform</div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="portfolio.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Portfolio
+      </a>
+      <a href="learning.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Learning Paths
+      </a>
+      <a href="workspace.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        Workspace
+      </a>
+    </nav>
+    <div class="sidebar-section-label">Market</div>
+    <nav class="sidebar-nav">
+      <a href="workspace.html#pivots">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Market Pivots
+      </a>
+      <a href="workspace.html#edge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        Edge Sync
+      </a>
+    </nav>
+    <div class="sidebar-section-label">Trust</div>
+    <nav class="sidebar-nav">
+      <a href="workspace.html#provenance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Provenance
+      </a>
+      <a href="workspace.html#escrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Escrow
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div style="margin-bottom:28px;">
+      <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--ink);margin-bottom:4px;">
+        Namaste, <span id="welcomeName">Artisan</span> 🙏
+      </h1>
+      <p style="font-family:var(--font-title);color:var(--ink-muted);font-style:italic;">Your craft's intelligence dashboard</p>
+    </div>
+
+    <!-- Load Artisan -->
+    <div id="loadPanel" style="background:white;border-radius:var(--radius-md);padding:24px;box-shadow:var(--shadow-card);margin-bottom:24px;">
+      <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:14px;">Load Your Artisan Profile</h3>
+      <div class="id-input-group">
+        <input type="number" id="artisanIdInput" placeholder="Enter your Artisan ID (e.g. 1)" min="1"/>
+        <button onclick="loadArtisan()">Load Profile</button>
+      </div>
+      <p style="font-family:var(--font-title);font-size:0.8rem;color:var(--ink-muted);">
+        Don't have an ID? <a href="register.html" style="color:var(--saffron);">Register here →</a>
+      </p>
+    </div>
+
+    <!-- Artisan Identity Card -->
+    <div class="artisan-id-widget" id="artisanWidget" style="display:none;">
+      <div class="id-avatar" id="widgetAvatar">A</div>
+      <div>
+        <div class="id-name" id="widgetName">—</div>
+        <div class="id-meta" id="widgetMeta">—</div>
+      </div>
+      <div style="margin-left:auto;text-align:right;">
+        <div class="id-number" id="widgetId">—</div>
+        <div class="id-label">Artisan ID</div>
+      </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="dash-grid" id="dashGrid">
+      <div class="dash-card saffron">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        </div>
+        <div class="card-value" id="statPortfolio">—</div>
+        <div class="card-label">Portfolio Items</div>
+      </div>
+      <div class="dash-card gold">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="card-value" id="statPaths">—</div>
+        <div class="card-label">Learning Paths</div>
+      </div>
+      <div class="dash-card teal">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="card-value" id="statPivots">—</div>
+        <div class="card-label">Market Pivots</div>
+      </div>
+      <div class="dash-card crimson">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="card-value" id="statCerts">—</div>
+        <div class="card-label">Certificates</div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Quick Actions -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Quick Actions</h3>
+        </div>
+        <div class="panel-body">
+          <div class="quick-actions">
+            <a href="portfolio.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(232,98,26,0.1);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#E8621A" stroke-width="2" style="width:20px;height:20px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+              </div>
+              <div>
+                <div class="qa-text">Upload Artwork</div>
+                <div class="qa-sub">Add to portfolio</div>
+              </div>
+            </a>
+            <a href="learning.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(201,150,58,0.1);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#C9963A" stroke-width="2" style="width:20px;height:20px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <div>
+                <div class="qa-text">Learning Path</div>
+                <div class="qa-sub">Continue modules</div>
+              </div>
+            </a>
+            <a href="workspace.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(26,107,94,0.1);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#1A6B5E" stroke-width="2" style="width:20px;height:20px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <div>
+                <div class="qa-text">Market Pivots</div>
+                <div class="qa-sub">AI recommendations</div>
+              </div>
+            </a>
+            <a href="workspace.html" class="quick-action">
+              <div class="qa-icon" style="background:rgba(139,26,26,0.1);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#A8302C" stroke-width="2" style="width:20px;height:20px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div>
+                <div class="qa-text">Mint Certificate</div>
+                <div class="qa-sub">Prove authenticity</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Recent Activity</h3>
+        </div>
+        <div class="panel-body">
+          <div class="activity-list" id="activityList">
+            <div style="text-align:center;padding:20px;font-family:var(--font-title);color:var(--ink-muted);font-style:italic;font-size:0.88rem;">
+              Load your artisan profile to see activity
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edge Sync -->
+    <div class="panel" style="margin-top:24px;" id="edgePanel" style="display:none;">
+      <div class="panel-header">
+        <h3>Edge Sync Status</h3>
+        <span class="tag teal">Offline Ready</span>
+      </div>
+      <div class="panel-body">
+        <div class="edge-list" id="edgeList">
+          <div style="font-family:var(--font-title);color:var(--ink-muted);font-size:0.88rem;font-style:italic;">Load profile to see edge status</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+// Pre-fill from session
+const stored = AppState.load();
+if (stored) {
+  document.getElementById('artisanIdInput').value = stored.id;
+  setTimeout(() => loadArtisan(), 300);
+}
+
+async function loadArtisan() {
+  const idVal = document.getElementById('artisanIdInput').value;
+  const id = parseInt(idVal);
+  if (!id) { showToast('Please enter a valid Artisan ID', 'error'); return; }
+
+  const result = await api.getWorkspace(id);
+  if (!result.ok) { showToast(`Could not load artisan: ${result.error}`, 'error'); return; }
+
+  const ws = result.data;
+  const artisan = ws.artisan;
+  AppState.save(artisan);
+
+  // Update sidebar
+  const init = initials(artisan.name);
+  document.getElementById('sidebarAvatar').textContent = init;
+  document.getElementById('sidebarName').textContent = artisan.name;
+  document.getElementById('sidebarCraft').textContent = `${artisan.craft_tradition || 'Artisan'} · ${artisan.region || 'India'}`;
+
+  // Welcome
+  document.getElementById('welcomeName').textContent = artisan.name.split(' ')[0];
+
+  // Identity widget
+  document.getElementById('artisanWidget').style.display = 'flex';
+  document.getElementById('widgetAvatar').textContent = init;
+  document.getElementById('widgetName').textContent = artisan.name;
+  document.getElementById('widgetMeta').textContent = `${artisan.craft_tradition || 'Artisan'} · ${artisan.village || artisan.region || 'India'}`;
+  document.getElementById('widgetId').textContent = `#${artisan.id}`;
+
+  // Stats
+  document.getElementById('statPortfolio').textContent = ws.portfolio.length;
+  document.getElementById('statPaths').textContent = ws.learning_paths.length;
+  document.getElementById('statPivots').textContent = ws.product_pivots.length;
+  document.getElementById('statCerts').textContent = '0';
+
+  // Activity
+  const acts = document.getElementById('activityList');
+  const actItems = [];
+  if (ws.portfolio.length) {
+    actItems.push({ icon: '🖼️', text: `Uploaded ${ws.portfolio.length} portfolio item(s)`, time: 'Recently' });
+  }
+  if (ws.learning_paths.length) {
+    actItems.push({ icon: '📚', text: `Learning path created: ${ws.learning_paths[0].title}`, time: 'Recently' });
+  }
+  if (ws.product_pivots.length) {
+    actItems.push({ icon: '📈', text: `${ws.product_pivots.length} market pivot recommendations available`, time: 'AI Analysis' });
+  }
+  if (!actItems.length) {
+    actItems.push({ icon: '🎉', text: 'Welcome! Upload artwork to get started.', time: 'Now' });
+  }
+
+  acts.innerHTML = actItems.map(a => `
+    <div class="activity-item">
+      <div class="act-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/></svg></div>
+      <div>
+        <div class="act-text">${a.icon} ${a.text}</div>
+        <div class="act-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+
+  // Edge sync
+  const edgeResult = await api.getEdgeSummary(id);
+  const edgePanel = document.getElementById('edgePanel');
+  edgePanel.style.display = 'block';
+  if (edgeResult.ok && edgeResult.data.length) {
+    document.getElementById('edgeList').innerHTML = edgeResult.data.map(e => `
+      <div class="edge-item">
+        <div class="edge-icon" style="background:rgba(26,107,94,0.1);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A6B5E" stroke-width="2" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        </div>
+        <div>
+          <div class="edge-name">${e.model_name}</div>
+          <div style="font-family:var(--font-title);font-size:0.76rem;color:var(--ink-muted);">Complexity: ${fmtScore(e.complexity_score)} · Uniqueness: ${fmtScore(e.uniqueness_score)}</div>
+        </div>
+        <div class="edge-badge ${e.offline_ready ? 'online' : 'offline'}">${e.offline_ready ? '✓ Offline Ready' : 'Online Only'}</div>
+      </div>
+    `).join('');
+  }
+
+  showToast(`Profile loaded: ${artisan.name}`, 'success');
+  document.getElementById('loadPanel').style.display = 'none';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning Paths — ArtisanPath</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+/* ─── Page-specific styles ─────────────────────────────── */
+.path-card {
+  background: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: 24px;
+  transition: var(--transition);
+}
+.path-card:hover { box-shadow: var(--shadow-warm); transform: translateY(-2px); }
+
+.path-card-header {
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid var(--ivory-dark);
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  background: linear-gradient(135deg, rgba(232,98,26,0.03), rgba(201,150,58,0.04));
+}
+.path-card-header h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 4px;
+}
+.path-meta {
+  font-family: var(--font-title);
+  font-size: 0.82rem; font-style: italic;
+  color: var(--ink-muted);
+}
+.path-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-title);
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--saffron);
+  background: rgba(232,98,26,0.08);
+  border: 1px solid rgba(232,98,26,0.18);
+  padding: 5px 12px; border-radius: 40px;
+  flex-shrink: 0;
+}
+
+.modules-accordion { padding: 0; }
+.module-item {
+  border-bottom: 1px solid var(--ivory-dark);
+}
+.module-item:last-child { border-bottom: none; }
+
+.module-trigger {
+  width: 100%;
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 26px;
+  background: none; border: none; cursor: pointer;
+  text-align: left; transition: var(--transition-fast);
+}
+.module-trigger:hover { background: rgba(232,98,26,0.025); }
+.module-trigger.open { background: rgba(232,98,26,0.04); }
+
+.module-num {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--ivory-dark);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.78rem; font-weight: 700;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+  transition: var(--transition-fast);
+}
+.module-trigger.open .module-num {
+  background: var(--saffron);
+  color: white;
+}
+
+.module-title-wrap { flex: 1; }
+.module-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--ink); display: block; margin-bottom: 2px;
+}
+.module-hours {
+  font-family: var(--font-title);
+  font-size: 0.78rem; color: var(--ink-muted); font-style: italic;
+}
+.module-chevron {
+  width: 18px; height: 18px; color: var(--ink-muted);
+  transition: transform 0.28s ease; flex-shrink: 0;
+}
+.module-trigger.open .module-chevron { transform: rotate(180deg); }
+
+.module-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.38s cubic-bezier(0.23,1,0.32,1);
+}
+.module-body.open { max-height: 500px; }
+.module-body-inner {
+  padding: 4px 26px 22px 70px;
+}
+.module-desc {
+  font-family: var(--font-title);
+  font-size: 0.88rem; color: var(--ink-soft);
+  line-height: 1.65; margin-bottom: 14px;
+}
+.skill-nodes-label {
+  font-family: var(--font-title);
+  font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-muted); margin-bottom: 8px;
+}
+.skill-nodes {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.skill-node {
+  display: inline-block;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  color: var(--teal);
+  background: rgba(26,107,94,0.07);
+  border: 1px solid rgba(26,107,94,0.18);
+  padding: 3px 10px; border-radius: 40px;
+}
+.submodules-label {
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin: 14px 0 8px;
+}
+.submodules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.submodule-item {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  background: var(--ivory);
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+.video-card {
+  border: 1px solid rgba(201,150,58,0.28);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(201,150,58,0.08), rgba(232,98,26,0.08));
+  padding: 12px 13px;
+}
+.video-label {
+  font-family: var(--font-title);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 5px;
+}
+.video-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--saffron-deep);
+}
+
+/* ─── Generate Panel ───────────────────────────────────── */
+.generate-panel {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 28px; box-shadow: var(--shadow-card);
+  margin-bottom: 32px;
+}
+.generate-panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 6px;
+}
+.generate-panel p {
+  font-family: var(--font-title);
+  font-size: 0.88rem; color: var(--ink-muted);
+  font-style: italic; margin-bottom: 20px;
+}
+.generate-row {
+  display: flex; gap: 12px; align-items: flex-end;
+}
+.generate-row input {
+  flex: 1;
+  padding: 11px 16px;
+  font-family: var(--font-body); font-size: 0.92rem;
+  color: var(--ink);
+  border: 1.5px solid var(--ivory-dark); border-radius: var(--radius-sm);
+  background: var(--ivory); outline: none; transition: var(--transition-fast);
+}
+.generate-row input:focus { border-color: var(--saffron); background: white; }
+
+/* ─── Empty state ──────────────────────────────────────── */
+.empty-paths {
+  text-align: center; padding: 80px 40px;
+  background: white; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+.empty-paths .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+.empty-paths h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 8px;
+}
+.empty-paths p {
+  font-family: var(--font-title); font-size: 0.9rem; color: var(--ink-muted);
+  font-style: italic;
+}
+
+/* ─── Progress bar ─────────────────────────────────────── */
+.path-progress-bar {
+  height: 4px; background: var(--ivory-dark);
+  border-radius: 2px; margin: 14px 26px 0; overflow: hidden;
+}
+.path-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--saffron), var(--gold));
+  border-radius: 2px;
+  transition: width 1s ease;
+}
+
+/* ─── Stats strip ──────────────────────────────────────── */
+.learning-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-bottom: 28px;
+}
+.lstat-card {
+  background: white; border-radius: var(--radius-md);
+  padding: 20px 22px; box-shadow: var(--shadow-card);
+  border-top: 3px solid transparent;
+  transition: var(--transition);
+}
+.lstat-card:nth-child(1) { border-top-color: var(--saffron); }
+.lstat-card:nth-child(2) { border-top-color: var(--gold); }
+.lstat-card:nth-child(3) { border-top-color: var(--teal); }
+.lstat-num {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 700;
+  color: var(--ink); line-height: 1;
+}
+.lstat-label {
+  font-family: var(--font-title); font-size: 0.8rem;
+  color: var(--ink-muted); margin-top: 4px; font-style: italic;
+}
+
+/* ─── Loading spinner ─────────────────────────────────── */
+.spinner {
+  width: 22px; height: 22px;
+  border: 2.5px solid var(--ivory-dark);
+  border-top-color: var(--saffron);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.btn-loading { display: flex; align-items: center; gap: 8px; }
+
+@media (max-width: 900px) {
+  .learning-stats { grid-template-columns: 1fr; }
+  .path-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .generate-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 640px) {
+  .module-trigger { padding: 14px 14px; }
+  .module-body-inner { padding: 4px 14px 16px 14px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg class="logo-mark" viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="20" fill="#1C1009"/>
+      <path d="M21 8 L24 16 L32 16 L26 21 L28 29 L21 24 L14 29 L16 21 L10 16 L18 16 Z" fill="#C9963A"/>
+      <circle cx="21" cy="21" r="4" fill="#E8B84B"/>
+    </svg>
+    <span class="logo-text">Artisan<span>PATH</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="portfolio.html">Portfolio</a></li>
+    <li><a href="learning.html" class="active">Learning</a></li>
+    <li><a href="workspace.html">Workspace</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="register.html" class="btn-nav outline">Register Artisan</a>
+    <a href="dashboard.html" class="btn-nav filled">Dashboard</a>
+  </div>
+  <div class="nav-hamburger" aria-label="Open menu" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="layout-sidebar">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="artisan-avatar" id="sidebarAvatar">A</div>
+      <div class="artisan-name" id="sidebarName">Artisan</div>
+      <div class="artisan-meta" id="sidebarCraft">Traditional Craft · India</div>
+    </div>
+    <div class="sidebar-section-label">Platform</div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="portfolio.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Portfolio
+      </a>
+      <a href="learning.html" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Learning Paths
+      </a>
+      <a href="workspace.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        Workspace
+      </a>
+    </nav>
+    <div class="sidebar-section-label">Market</div>
+    <nav class="sidebar-nav">
+      <a href="workspace.html#pivots">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Market Pivots
+      </a>
+      <a href="workspace.html#edge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+        Edge Sync
+      </a>
+    </nav>
+    <div class="sidebar-section-label">Trust</div>
+    <nav class="sidebar-nav">
+      <a href="workspace.html#provenance">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Provenance
+      </a>
+      <a href="workspace.html#escrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Escrow
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div style="margin-bottom:28px;">
+      <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--ink);margin-bottom:4px;">
+        Learning Paths
+      </h1>
+      <p style="font-family:var(--font-title);color:var(--ink-muted);font-style:italic;">AI-generated skill journeys rooted in your craft tradition</p>
+    </div>
+
+    <!-- Artisan Loader -->
+    <div id="loadPanel" style="background:white;border-radius:var(--radius-md);padding:24px;box-shadow:var(--shadow-card);margin-bottom:24px;">
+      <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:14px;">Load Your Artisan Profile</h3>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <input type="number" id="artisanIdInput" placeholder="Enter your Artisan ID (e.g. 1)" min="1"
+          style="flex:1;padding:11px 16px;font-family:var(--font-body);font-size:0.92rem;color:var(--ink);border:1.5px solid var(--ivory-dark);border-radius:var(--radius-sm);background:var(--ivory);outline:none;"/>
+        <button onclick="loadArtisan()" class="btn btn-primary" style="white-space:nowrap;">Load Profile</button>
+      </div>
+      <p style="font-family:var(--font-title);font-size:0.8rem;color:var(--ink-muted);">
+        Don't have an ID? <a href="register.html" style="color:var(--saffron);">Register here →</a>
+      </p>
+    </div>
+
+    <!-- Main content area (hidden until artisan loaded) -->
+    <div id="mainArea" style="display:none;">
+
+      <!-- Stats -->
+      <div class="learning-stats" id="statsStrip">
+        <div class="lstat-card">
+          <div class="lstat-num" id="statPaths">0</div>
+          <div class="lstat-label">Learning Paths</div>
+        </div>
+        <div class="lstat-card">
+          <div class="lstat-num" id="statModules">0</div>
+          <div class="lstat-label">Total Modules</div>
+        </div>
+        <div class="lstat-card">
+          <div class="lstat-num" id="statHours">0h</div>
+          <div class="lstat-label">Estimated Hours</div>
+        </div>
+      </div>
+
+      <!-- Generate panel -->
+      <div class="generate-panel">
+        <h2>Generate New Learning Path</h2>
+        <p>Our pedagogy AI will craft a personalised skill journey based on your craft tradition and portfolio analysis.</p>
+        <div class="generate-row">
+          <input type="text" id="pathTitle" placeholder="Optional: give this path a name (e.g. 'Advanced Zardozi Techniques')" />
+          <button class="btn btn-primary" onclick="generatePath()" id="generateBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Generate Path
+          </button>
+        </div>
+      </div>
+
+      <!-- Paths list -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h2 style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;color:var(--ink);">Your Learning Paths</h2>
+        <button onclick="refreshPaths()" class="btn btn-outline" style="font-size:0.8rem;padding:7px 14px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Refresh
+        </button>
+      </div>
+
+      <div id="pathsList"></div>
+
+    </div><!-- /mainArea -->
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+/* ─── Learning Paths Page ──────────────────────────────── */
+
+let currentArtisan = null;
+
+async function loadArtisan() {
+  const idVal = document.getElementById('artisanIdInput').value.trim();
+  const id = parseInt(idVal);
+  if (!id || id < 1) { showToast('Please enter a valid Artisan ID', 'error'); return; }
+
+  const btn = document.querySelector('#loadPanel button');
+  btn.innerHTML = '<span class="spinner"></span>';
+  btn.disabled = true;
+
+  const res = await api.getWorkspace(id);
+
+  btn.innerHTML = 'Load Profile';
+  btn.disabled = false;
+
+  if (!res.ok) { showToast(res.error || 'Artisan not found', 'error'); return; }
+
+  currentArtisan = res.data.artisan;
+  AppState.save(currentArtisan);
+
+  document.getElementById('sidebarAvatar').textContent = initials(currentArtisan.name);
+  document.getElementById('sidebarName').textContent = currentArtisan.name;
+  document.getElementById('sidebarCraft').textContent =
+    `${currentArtisan.craft_tradition || 'Artisan'} · ${currentArtisan.region || 'India'}`;
+
+  document.getElementById('loadPanel').style.display = 'none';
+  document.getElementById('mainArea').style.display = 'block';
+
+  renderPaths(res.data.learning_paths || []);
+  showToast(`Welcome, ${currentArtisan.name}!`, 'success');
+}
+
+async function refreshPaths() {
+  if (!currentArtisan) return;
+  const res = await api.getLearningPaths(currentArtisan.id);
+  if (res.ok) renderPaths(res.data);
+}
+
+async function generatePath() {
+  if (!currentArtisan) return;
+  const title = document.getElementById('pathTitle').value.trim();
+  const btn = document.getElementById('generateBtn');
+  btn.innerHTML = '<span class="btn-loading"><span class="spinner"></span> Generating…</span>';
+  btn.disabled = true;
+
+  const res = await api.createLearningPath(currentArtisan.id, title);
+  btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Generate Path`;
+  btn.disabled = false;
+
+  if (!res.ok) { showToast(res.error || 'Failed to generate path', 'error'); return; }
+
+  showToast('Learning path generated!', 'success');
+  document.getElementById('pathTitle').value = '';
+  await refreshPaths();
+}
+
+function renderPaths(paths) {
+  const container = document.getElementById('pathsList');
+
+  if (!paths || paths.length === 0) {
+    container.innerHTML = `
+      <div class="empty-paths">
+        <div class="empty-icon">📚</div>
+        <h3>No Learning Paths Yet</h3>
+        <p>Generate your first AI-crafted learning journey above. Our pedagogy AI will create a personalised skill path based on your craft tradition.</p>
+      </div>`;
+    updateStats([]);
+    return;
+  }
+
+  updateStats(paths);
+
+  container.innerHTML = paths.map((path, pi) => {
+    const modules = path.modules || [];
+    const totalHours = modules.reduce((sum, m) => sum + (m.estimated_hours || 0), 0);
+    const progressPct = Math.min(100, Math.round((pi / paths.length) * 60 + 20));
+
+    return `
+    <div class="path-card reveal">
+      <div class="path-card-header">
+        <div>
+          <h3>${esc(path.title)}</h3>
+          <div class="path-meta">Artisan #${path.artisan_id} &middot; ${modules.length} modules &middot; ~${totalHours.toFixed(1)}h total</div>
+        </div>
+        <span class="path-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Path #${path.id}
+        </span>
+      </div>
+      <div class="path-progress-bar">
+        <div class="path-progress-fill" style="width:${progressPct}%"></div>
+      </div>
+      <div class="modules-accordion">
+        ${modules.map((mod, mi) => `
+        <div class="module-item">
+          <button class="module-trigger" onclick="toggleModule(this)" aria-expanded="false">
+            <span class="module-num">${mod.order_index !== undefined ? mod.order_index : mi + 1}</span>
+            <span class="module-title-wrap">
+              <span class="module-title">${esc(mod.title)}</span>
+              <span class="module-hours">~${(mod.estimated_hours || 0).toFixed(1)} hours</span>
+            </span>
+            <svg class="module-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="module-body">
+            <div class="module-body-inner">
+              <p class="module-desc">${esc(mod.description || '')}</p>
+              ${mod.skill_nodes && mod.skill_nodes.length ? `
+              <div class="skill-nodes-label">Skill Nodes</div>
+              <div class="skill-nodes">
+                ${mod.skill_nodes.map(s => `<span class="skill-node">${esc(s)}</span>`).join('')}
+              </div>` : ''}
+              ${mod.submodules && mod.submodules.length ? `
+              <div class="submodules-label">Submodules</div>
+              <div class="submodules-list">
+                ${mod.submodules.map(sm => `<div class="submodule-item">${esc(sm)}</div>`).join('')}
+              </div>` : ''}
+              ${(mod.video_url || mod.video_search_query) ? `
+              <div class="video-card">
+                <div class="video-label">Related YouTube Video</div>
+                <div class="video-title">${esc(mod.video_title || 'Watch tutorial for this module')}</div>
+                <a class="video-link" href="${esc(mod.video_url || ('https://www.youtube.com/results?search_query=' + encodeURIComponent(mod.video_search_query || mod.title || 'craft tutorial')))}" target="_blank" rel="noopener noreferrer">
+                  Watch on YouTube
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
+                </a>
+              </div>` : ''}
+            </div>
+          </div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  initReveal();
+}
+
+function updateStats(paths) {
+  const totalModules = paths.reduce((s, p) => s + (p.total_modules || (p.modules || []).length), 0);
+  const totalHours = paths.reduce((s, p) => s + (p.modules || []).reduce((ms, m) => ms + (m.estimated_hours || 0), 0), 0);
+  document.getElementById('statPaths').textContent = paths.length;
+  document.getElementById('statModules').textContent = totalModules;
+  document.getElementById('statHours').textContent = totalHours.toFixed(1) + 'h';
+}
+
+function toggleModule(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.classList.toggle('open');
+  body.classList.toggle('open', isOpen);
+  btn.setAttribute('aria-expanded', isOpen);
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ─── Init ──────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  AppState.load();
+  initNavbar();
+  initReveal();
+  const stored = AppState.currentArtisan;
+  if (stored) {
+    document.getElementById('artisanIdInput').value = stored.id;
+    document.getElementById('sidebarAvatar').textContent = initials(stored.name);
+    document.getElementById('sidebarName').textContent = stored.name;
+    document.getElementById('sidebarCraft').textContent =
+      `${stored.craft_tradition || 'Artisan'} · ${stored.region || 'India'}`;
+    loadArtisan();
+  }
+});
+</script>
+</body>
+</html>
